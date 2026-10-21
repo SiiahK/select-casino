@@ -1,13 +1,13 @@
 {
-	"name": "Gamba Play",
-	"short_name": "Gamba",
+	"name": "Select Casino",
+	"short_name": "Select",
 	"start_url": "/",
 	"display": "standalone",
 	"background_color": "#000000",
 	"lang": "en",
 	"scope": "/",
-	"theme_color": "#FF5555",
-	"description": "",
+	"theme_color": "#1a1a2e",
+	"description": "Select Infrastructure Casino — Powered by Gamba",
 	"icons": [
 		{
 			"src": "/icon-512.png",

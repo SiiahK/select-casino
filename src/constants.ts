@@ -1,87 +1,52 @@
 import { PublicKey } from '@solana/web3.js'
-import { FAKE_TOKEN_MINT, PoolToken, TokenMeta, makeHeliusTokenFetcher } from 'gamba-react-ui-v2'
+import { PoolToken, TokenMeta, makeHeliusTokenFetcher } from 'gamba-react-ui-v2'
 
-// Get RPC from the .env file or default to the public RPC.
 export const RPC_ENDPOINT = import.meta.env.VITE_RPC_ENDPOINT ?? 'https://api.mainnet-beta.solana.com'
 
-// Solana address that will receive fees when somebody plays on this platform
+// Squads vault — fees accumulate here under 2-of-3 multisig control
 export const PLATFORM_CREATOR_ADDRESS = new PublicKey(
-  'V2grJiwjs25iJYqumbHyKo5MTK7SFqZSdmoRaj8QWb9',
+  'HBZPPQpwzmMNrvbT3SywLWQofpCzwdJFeGeG2CcZcT6j',
 )
 
-// Gamba explorer URL - Appears in RecentPlays
 export const EXPLORER_URL = 'https://explorer.gamba.so'
+export const PLATFORM_SHARABLE_URL = 'select-casino.vercel.app'
 
-// Platform URL - Appears in ShareModal
-export const PLATFORM_SHARABLE_URL = 'play.gamba.so'
-
-// Creator fee (in %)
-export const PLATFORM_CREATOR_FEE = 0.01 // 1% !!max 7%!!
-
-export const MULTIPLAYER_FEE = 0.015 // 1% 
-
-// Jackpot fee (in %)
-export const PLATFORM_JACKPOT_FEE = 0.001 // 0.1%,  not jackpot game specific, but platform wide
-
-// Referral fee (in %)
-export const PLATFORM_REFERRAL_FEE = 0.0025 // 0.25%
-
-/** If the user should be able to revoke an invite after they've accepted an invite */
+export const PLATFORM_CREATOR_FEE = 0.01 // 1%
+export const MULTIPLAYER_FEE = 0.015
+export const PLATFORM_JACKPOT_FEE = 0.001
+export const PLATFORM_REFERRAL_FEE = 0.0025
 export const PLATFORM_ALLOW_REFERRER_REMOVAL = true
 
-// Just a helper function
+const REG_MINT = 'AiqwHdAQaTRxYS3mAd83xZYEjikNkx1BMpQ26FkqHDp6'
+
 const lp = (tokenMint: PublicKey | string, poolAuthority?: PublicKey | string): PoolToken => ({
   token: new PublicKey(tokenMint),
   authority: poolAuthority !== undefined ? new PublicKey(poolAuthority) : undefined,
 })
 
-/**
- * List of pools supported by this platform
- * Make sure the token you want to list has a corresponding pool on https://explorer.gamba.so/pools
- * For private pools, add the creator of the Liquidity Pool as a second argument
- */
 export const POOLS = [
-  // Fake token:
-  lp(FAKE_TOKEN_MINT),
-  // SOL:
+  // SOL — public Gamba pool (works immediately)
   lp('So11111111111111111111111111111111111111112'),
-  // USDC:
+  // USDC — public Gamba pool
   lp('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
-  // Wormhole:
-  lp('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'),
-  //private pool example (mint + authority)
-  lp('So11111111111111111111111111111111111111112', 'Fki4Yah4ZXvFmDUw8WspxRAEmfERPth7PPEwPYt3bior'),
+  // $REG — needs Gamba LP pool creation (Squads proposal) to activate
+  lp(REG_MINT),
 ]
 
-// The default token to be selected
 export const DEFAULT_POOL = POOLS[0]
 
-/**
- * List of token metadata for the supported tokens
- * Alternatively, we can provide a fetcher method to automatically fetch metdata. See TOKEN_METADATA_FETCHER below.
- */
 export const TOKEN_METADATA: (Partial<TokenMeta> & {mint: PublicKey})[] = [
   {
-    mint: FAKE_TOKEN_MINT,
-    name: 'Fake',
-    symbol: 'FAKE',
-    image: '/fakemoney.png',
-    baseWager: 1e9,
-    decimals: 9,
-    usdPrice: 0,
-  },
-  {
-    mint: new PublicKey('85VBFQZC9TZkfaptBWjvUw7YbZjy52A6mjtPGjstQAmQ'),
-    name: 'W',
-    symbol: 'Wormhole',
-    image: 'https://wormhole.com/token.png',
+    mint: new PublicKey(REG_MINT),
+    name: 'Registry',
+    symbol: 'REG',
+    image: '/reg-token.png',
     baseWager: 1e6,
     decimals: 6,
     usdPrice: 0,
   },
 ]
 
-/** HTML to display to user that they need to accept in order to continue */
 export const TOS_HTML = `
   <p><b>1. Age Requirement:</b> Must be at least 18 years old.</p>
   <p><b>2. Legal Compliance:</b> Follow local laws responsibly.</p>
@@ -94,10 +59,6 @@ export const TOS_HTML = `
   <p><b>9. Responsible Gaming:</b> Play responsibly; seek help if needed.</p>
 `
 
-/**
- * A method for automatically fetching Token Metadata.
- * Here we create a fetcher that uses Helius metadata API, if an API key exists as an environment variable.
- */
 export const TOKEN_METADATA_FETCHER = (
   () => {
     if (import.meta.env.VITE_HELIUS_API_KEY) {
@@ -109,10 +70,8 @@ export const TOKEN_METADATA_FETCHER = (
   }
 )()
 
-export const ENABLE_LEADERBOARD = true 
-export const ENABLE_TROLLBOX = false // Requires setup in vercel (check tutorial in discord)
+export const ENABLE_LEADERBOARD = true
+export const ENABLE_TROLLBOX = false
 
-/** If true, the featured game is fully playable inline on the dashboard */
-export const FEATURED_GAME_INLINE = false 
-export const FEATURED_GAME_ID: string | undefined = 'jackpot'   // ← put game id or leave undefined
-
+export const FEATURED_GAME_INLINE = false
+export const FEATURED_GAME_ID: string | undefined = 'jackpot'
