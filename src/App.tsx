@@ -15,6 +15,7 @@ import Header from './sections/Header'
 import RecentPlays from './sections/RecentPlays/RecentPlays'
 import Toasts from './sections/Toasts'
 import TrollBox from './components/TrollBox'
+import VacuumLiveFeed from './components/VacuumLiveFeed'
 
 import { MainWrapper, TosInner, TosWrapper } from './styles'
 
@@ -84,6 +85,8 @@ export default function App() {
           {/* Dedicated game pages */}
           <Route path="/:gameId"   element={<Game />} />
         </Routes>
+
+        <VacuumLiveFeed />
 
         <h2 style={{ textAlign: 'center' }}>Recent Plays</h2>
         <RecentPlays />

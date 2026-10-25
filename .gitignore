@@ -4,3 +4,5 @@ node_modules
 dist
 dev-dist
 .env
+.vercel
+.env.production

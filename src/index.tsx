@@ -48,10 +48,6 @@ function Root() {
                     defaultCreatorFee={PLATFORM_CREATOR_FEE}
                     defaultJackpotFee={PLATFORM_JACKPOT_FEE}
                     defaultPool={DEFAULT_POOL}
-                    referral={{
-                      fee: PLATFORM_REFERRAL_FEE,
-                      prefix: 'code',
-                    }}
                   >
                     <App />
                   </GambaPlatformProvider>

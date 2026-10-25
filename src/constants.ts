@@ -1,7 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 import { PoolToken, TokenMeta, makeHeliusTokenFetcher } from 'gamba-react-ui-v2'
 
-export const RPC_ENDPOINT = import.meta.env.VITE_RPC_ENDPOINT ?? 'https://api.mainnet-beta.solana.com'
+export const RPC_ENDPOINT = import.meta.env.VITE_RPC_ENDPOINT ?? 'https://mainnet.helius-rpc.com/?api-key=edac585c-537b-4450-a788-e8b948f921bf'
 
 // Squads vault — fees accumulate here under 2-of-3 multisig control
 export const PLATFORM_CREATOR_ADDRESS = new PublicKey(
@@ -9,15 +9,17 @@ export const PLATFORM_CREATOR_ADDRESS = new PublicKey(
 )
 
 export const EXPLORER_URL = 'https://explorer.gamba.so'
-export const PLATFORM_SHARABLE_URL = 'select-casino.vercel.app'
+export const PLATFORM_SHARABLE_URL = 'play.tryaigility.com'
 
-export const PLATFORM_CREATOR_FEE = 0.01 // 1%
+export const PLATFORM_CREATOR_FEE = 0.01 // 1% — LOCKED. referralFee deducts from this; see index.tsx
 export const MULTIPLAYER_FEE = 0.015
 export const PLATFORM_JACKPOT_FEE = 0.001
-export const PLATFORM_REFERRAL_FEE = 0.0025
+// Referral DISABLED: was 0.0025 (0.25%), but the Gamba SDK deducts it from
+// creatorFee via referralPlugin.ts (creatorFeeDeduction=1 by default).
+// With referral active, referred plays paid only 0.75% to creator.
+// Set to 0 so 100% of creatorFee goes to our vault.
+export const PLATFORM_REFERRAL_FEE = 0
 export const PLATFORM_ALLOW_REFERRER_REMOVAL = true
-
-const REG_MINT = 'AiqwHdAQaTRxYS3mAd83xZYEjikNkx1BMpQ26FkqHDp6'
 
 const lp = (tokenMint: PublicKey | string, poolAuthority?: PublicKey | string): PoolToken => ({
   token: new PublicKey(tokenMint),
@@ -25,27 +27,15 @@ const lp = (tokenMint: PublicKey | string, poolAuthority?: PublicKey | string): 
 })
 
 export const POOLS = [
-  // SOL — public Gamba pool (works immediately)
+  // SOL — public Gamba pool (primary, default)
   lp('So11111111111111111111111111111111111111112'),
   // USDC — public Gamba pool
   lp('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
-  // $REG — needs Gamba LP pool creation (Squads proposal) to activate
-  lp(REG_MINT),
 ]
 
 export const DEFAULT_POOL = POOLS[0]
 
-export const TOKEN_METADATA: (Partial<TokenMeta> & {mint: PublicKey})[] = [
-  {
-    mint: new PublicKey(REG_MINT),
-    name: 'Registry',
-    symbol: 'REG',
-    image: '/reg-token.png',
-    baseWager: 1e6,
-    decimals: 6,
-    usdPrice: 0,
-  },
-]
+export const TOKEN_METADATA: (Partial<TokenMeta> & {mint: PublicKey})[] = []
 
 export const TOS_HTML = `
   <p><b>1. Age Requirement:</b> Must be at least 18 years old.</p>

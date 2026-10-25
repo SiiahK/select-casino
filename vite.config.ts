@@ -15,6 +15,12 @@ export default defineConfig(() => ({
       crypto: 'crypto-browserify',
     },
   },
+  build: {
+    target: 'es2020',
+    rollupOptions: {
+      maxParallelFileOps: 1,
+    },
+  },
   plugins: [
     react({ jsxRuntime: 'classic' }),
   ],
