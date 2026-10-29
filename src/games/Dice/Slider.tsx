@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 interface SliderProps {
   min: number
@@ -10,119 +10,100 @@ interface SliderProps {
   disabled?: boolean
 }
 
-const Container = styled.div`
+const Wrap = styled.div`
   position: relative;
   width: 100%;
+  padding-bottom: 28px;
 `
 
-const Wrapper = styled.div`
+const BarOuter = styled.div`
   position: relative;
-  background: #ff556a;
-  border-radius: 10px;
-  box-shadow: 0 0 0px 5px #32294355;
-  transition: box-shadow .2s ease;
-  height: 15px;
-  opacity: 1;
-  cursor: pointer;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--lose, #EF4444);
 `
 
-const Track = styled.div`
-  background: #55f275;
+const BarWin = styled.div`
   height: 100%;
-  border-radius: 10px 0 0 10px;
+  background: var(--win, #22C55E);
+  border-radius: 6px 0 0 6px;
+  transition: width .08s;
 `
 
-const StyledSlider = styled.input`
+const Input = styled.input`
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 0; top: 0;
+  width: 100%; height: 12px;
   -webkit-appearance: none;
   appearance: none;
-  width: 100%;
-  height: 100%;
   background: transparent;
   outline: none;
-  background: none;
-  border-radius: 10px;
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   cursor: pointer;
-
-  &:disabled {
-    cursor: default;
-  }
+  &:disabled { cursor: default; }
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    background: #FFFFFF;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--gold, #E0B44A);
+    box-shadow: 0 0 0 4px var(--bg, #08090C);
     cursor: pointer;
-    border-radius: 2px;
   }
-
   &::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: #FFFFFF;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--gold, #E0B44A);
+    box-shadow: 0 0 0 4px var(--bg, #08090C);
+    border: none;
     cursor: pointer;
-    border-radius: 2px;
   }
 `
 
-const Label = styled.div<{$active: boolean}>`
-  margin-top: 10px;
+const Ticks = styled.div`
   position: absolute;
-  transform: translateX(-50%);
-  text-align: center;
-  background: #32294322;
-  padding: 5px;
-  border-radius: 10px;
-  min-width: 30px;
-  color: #ff949f;
-  transition: left .2s ease;
-  font-size: 75%;
-
-  ${(props) => props.$active && css`
-    color: #94ff94;
-  `}
-
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
 `
 
-function Slider ({ min: minValue, max: maxValue, value, onChange, disabled, range: [min, max] }: SliderProps) {
-  const labels = Array.from({ length: 5 }).map((_, i, arr) => min + Math.floor(i / (arr.length - 1) * (max - min)))
+const Tick = styled.span`
+  font-family: var(--font-num, 'JetBrains Mono', monospace);
+  font-variant-numeric: tabular-nums;
+  font-size: 10px;
+  color: var(--text-dim, #5B6270);
+`
+
+export default function Slider({ min: minValue, max: maxValue, value, onChange, disabled, range: [rangeMin, rangeMax] }: SliderProps) {
+  const pct = ((value - rangeMin) / (rangeMax - rangeMin)) * 100
 
   const change = (newValue: number) => {
-    const fixedValue = Math.max(minValue, Math.min(maxValue, newValue))
-    if (fixedValue !== value)
-      onChange(fixedValue)
+    const fixed = Math.max(minValue, Math.min(maxValue, newValue))
+    if (fixed !== value) onChange(fixed)
   }
 
   return (
-    <Container>
-      <Wrapper>
-        <Track style={{ width: `calc(${value / max * 100}%)` }} />
-        <StyledSlider
-          type="range"
-          value={value}
-          disabled={disabled}
-          min={min}
-          max={max}
-          onChange={(event) => change(Number(event.target.value))}
-        />
-      </Wrapper>
-      {labels.map((label, i) => (
-        <Label
-          key={i}
-          $active={value >= label}
-          style={{ left: (label / max * 100) + '%' }}
-        >
-          {label}
-        </Label>
-      ))}
-    </Container>
+    <Wrap>
+      <BarOuter>
+        <BarWin style={{ width: `${pct}%` }} />
+      </BarOuter>
+      <Input
+        type="range"
+        value={value}
+        disabled={disabled}
+        min={rangeMin}
+        max={rangeMax}
+        onChange={(e) => change(Number(e.target.value))}
+      />
+      <Ticks>
+        <Tick>0</Tick>
+        <Tick>25</Tick>
+        <Tick>50</Tick>
+        <Tick>75</Tick>
+        <Tick>100</Tick>
+      </Ticks>
+    </Wrap>
   )
 }
-
-export default Slider

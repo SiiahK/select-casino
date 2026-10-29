@@ -18,7 +18,12 @@ export default defineConfig(() => ({
   build: {
     target: 'es2020',
     rollupOptions: {
-      maxParallelFileOps: 1,
+      output: {
+        manualChunks(id: string) {
+          if (id.includes('three') || id.includes('@react-three')) return 'three'
+          if (id.includes('matter-js')) return 'matter'
+        },
+      },
     },
   },
   plugins: [

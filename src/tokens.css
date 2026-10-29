@@ -1,0 +1,89 @@
+:root {
+  --bg:            #08090C;
+  --surface:       #101218;
+  --surface-2:     #16191F;
+  --surface-3:     #1C2028;
+  --border:        #1E222B;
+  --border-strong: #2A2F3A;
+
+  --text:       #E6E8EC;
+  --text-mid:   #8A909C;
+  --text-dim:   #5B6270;
+  --text-faint: #3A404C;
+
+  --gold:       #E0B44A;
+  --gold-hi:    #F0C55C;
+  --gold-dim:   rgba(224, 180, 74, .12);
+
+  --win:  #22C55E;
+  --lose: #EF4444;
+
+  --r-chip: 4px; --r-input: 8px; --r-card: 12px; --r-full: 999px;
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s6: 24px; --s8: 32px; --s12: 48px;
+
+  --elev: inset 0 1px 0 rgba(255,255,255,.04);
+
+  --font-ui:  'Inter', system-ui, -apple-system, sans-serif;
+  --font-num: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --gamba-ui-primary-color: #E0B44A;
+  --gamba-ui-bg-color: #101218;
+  --gamba-ui-button-default-background: #16191F;
+  --gamba-ui-button-default-background-hover: #1C2028;
+  --gamba-ui-button-default-color: #E6E8EC;
+  --gamba-ui-button-main-background: #E0B44A;
+  --gamba-ui-button-main-background-hover: #F0C55C;
+  --gamba-ui-button-main-color: #08090C;
+  --gamba-ui-input-background: #08090C;
+  --gamba-ui-input-color: #E6E8EC;
+  --gamba-ui-input-background-hover: #101218;
+  --gamba-ui-border-radius: 8px;
+}
+
+* { box-sizing: border-box; }
+
+body, input, button, textarea, pre {
+  font-family: var(--font-ui);
+  font-size: 14px;
+}
+
+h1, h2, h3 { margin: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  cursor: default;
+  margin: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a { color: inherit; text-decoration: none; }
+
+body::-webkit-scrollbar { width: 4px; }
+body::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+
+.num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.wallet-adapter-button.wallet-adapter-button-trigger {
+  height: 36px;
+  line-height: 36px;
+  font-weight: 500;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-input);
+  font-size: 13px;
+}

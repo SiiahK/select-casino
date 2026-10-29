@@ -191,7 +191,7 @@ export default function Slots() {
                   />
                 ) : (
                   <>
-                    ❌ Choose a lower wager!
+                    Choose a lower wager
                   </>
                 )}
               </div>

@@ -169,7 +169,7 @@ export default function VacuumLiveFeed() {
       {loading && <div style={{ color: '#666', fontSize: 13 }}>Loading scanner data…</div>}
 
       <CtaButton>
-        ⚡ Unlock Whale Alpha Scanner & VIP Rakeback Boost ({SCAN_FEE_SOL} SOL)
+        Unlock Whale Alpha Scanner and VIP Rakeback Boost ({SCAN_FEE_SOL} SOL)
       </CtaButton>
 
       {pnl.length > 0 && (

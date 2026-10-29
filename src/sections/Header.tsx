@@ -1,158 +1,124 @@
-// src/sections/Header.tsx
+import React from 'react'
+import { NavLink } from 'react-router-dom'
+import styled from 'styled-components'
 import {
   GambaUi,
   TokenValue,
   useCurrentPool,
-  useGambaPlatformContext,
   useUserBalance,
 } from 'gamba-react-ui-v2'
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-import styled from 'styled-components'
-import { Modal } from '../components/Modal'
-import LeaderboardsModal from '../sections/LeaderBoard/LeaderboardsModal'
-import { PLATFORM_JACKPOT_FEE, PLATFORM_CREATOR_ADDRESS } from '../constants'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import TokenSelect from './TokenSelect'
 import { UserButton } from './UserButton'
-import { ENABLE_LEADERBOARD } from '../constants'
+import { formatSol } from '../utils/format'
 
-const Bonus = styled.button`
-  all: unset;
-  cursor: pointer;
-  color: #ffe42d;
-  border-radius: 10px;
-  padding: 2px 10px;
-  font-size: 12px;
-  text-transform: uppercase;
-  font-weight: bold;
-  transition: background-color 0.2s;
-  &:hover {
-    background: white;
-  }
-`
-
-const StyledHeader = styled.div`
+const Bar = styled.header`
+  height: 64px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  padding: 10px;
-  background: #000000cc;
-  backdrop-filter: blur(20px);
-  position: fixed;
+  padding: 0 var(--s4);
+  position: sticky;
   top: 0;
-  left: 0;
-  z-index: 1000;
+  z-index: 100;
 `
 
-const Logo = styled(NavLink)`
-  height: 35px;
-  margin: 0 15px;
-  & > img {
-    height: 120%;
-  }
+const Left = styled.div`
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+`
+
+const LogoLink = styled(NavLink)`
+  display: flex;
+  align-items: center;
+  height: 28px;
+  img { height: 100%; }
+`
+
+const Right = styled.div`
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+`
+
+const NetBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+`
+
+const NetDot = styled.span`
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--win);
+  display: inline-block;
+`
+
+const NavBtn = styled.button`
+  all: unset;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-mid);
+  padding: var(--s1) var(--s2);
+  border-radius: var(--r-chip);
+  transition: color .15s, background .15s;
+  &:hover { color: var(--text); background: var(--surface); }
+`
+
+const BalanceDisplay = styled.span`
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--text);
+  letter-spacing: -0.01em;
 `
 
 export default function Header() {
-  const pool = useCurrentPool()
-  const context = useGambaPlatformContext()
   const balance = useUserBalance()
-  const isDesktop = useMediaQuery('lg') 
-  const [showLeaderboard, setShowLeaderboard] = React.useState(false)
-  const [bonusHelp, setBonusHelp] = React.useState(false)
-  const [jackpotHelp, setJackpotHelp] = React.useState(false)
+  const isDesktop = useMediaQuery('lg')
 
   return (
-    <>
-      {bonusHelp && (
-        <Modal onClose={() => setBonusHelp(false)}>
-          <h1>Bonus ✨</h1>
-          <p>
-            You have <b>
-              <TokenValue amount={balance.bonusBalance} />
-            </b>{' '}
-            worth of free plays. This bonus will be applied automatically when you
-            play.
-          </p>
-          <p>Note that a fee is still needed from your wallet for each play.</p>
-        </Modal>
-      )}
+    <Bar>
+      <Left>
+        <LogoLink to="/">
+          <img alt="SELECT" src="/logo.svg" />
+        </LogoLink>
+      </Left>
 
-      {jackpotHelp && (
-        <Modal onClose={() => setJackpotHelp(false)}>
-          <h1>Jackpot 💰</h1>
-          <p style={{ fontWeight: 'bold' }}>
-            There&apos;s <TokenValue amount={pool.jackpotBalance} /> in the
-            Jackpot.
-          </p>
-          <p>
-            The Jackpot is a prize pool that grows with every bet made. As it
-            grows, so does your chance of winning. Once a winner is selected,
-            the pool resets and grows again from there.
-          </p>
-          <p>
-            You pay a maximum of{' '}
-            {(PLATFORM_JACKPOT_FEE * 100).toLocaleString(undefined, { maximumFractionDigits: 4 })}
-            % of each wager for a chance to win.
-          </p>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {context.defaultJackpotFee === 0 ? 'DISABLED' : 'ENABLED'}
-            <GambaUi.Switch
-              checked={context.defaultJackpotFee > 0}
-              onChange={(checked) =>
-                context.setDefaultJackpotFee(checked ? PLATFORM_JACKPOT_FEE : 0)
-              }
-            />
-          </label>
-        </Modal>
-      )}
+      <Right>
+        <NetBadge>
+          <NetDot /> MAINNET
+        </NetBadge>
 
-      {ENABLE_LEADERBOARD && showLeaderboard && (
-        <LeaderboardsModal
-          creator={PLATFORM_CREATOR_ADDRESS.toBase58()}
-          onClose={() => setShowLeaderboard(false)}
-        />
-      )}
-
-      <StyledHeader>
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <Logo to="/">
-            <img alt="Gamba logo" src="/logo.svg" />
-          </Logo>
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            gap: '10px',
-            alignItems: 'center',
-            position: 'relative',
-          }}
-        >
-          {pool.jackpotBalance > 0 && (
-            <Bonus onClick={() => setJackpotHelp(true)}>
-              💰 <TokenValue amount={pool.jackpotBalance} />
-            </Bonus>
-          )}
-
-          {balance.bonusBalance > 0 && (
-            <Bonus onClick={() => setBonusHelp(true)}>
-              ✨ <TokenValue amount={balance.bonusBalance} />
-            </Bonus>
-          )}
-
-          {/* Leaderboard shows only on desktop */}
-          {isDesktop && (
-            <GambaUi.Button onClick={() => setShowLeaderboard(true)}>
+        {isDesktop && (
+          <>
+            <NavBtn onClick={() => document.getElementById('originals-section')?.scrollIntoView({ behavior: 'smooth' })}>
               Leaderboard
-            </GambaUi.Button>
-          )}
+            </NavBtn>
+            <NavBtn as="a" href="/proof" style={{ textDecoration: 'none' }}>
+              Proof
+            </NavBtn>
+          </>
+        )}
 
-          <TokenSelect />
-          <UserButton />
-        </div>
-      </StyledHeader>
-    </>
+        {balance.balance > 0 && (
+          <BalanceDisplay className="num">
+            {formatSol(balance.balance)} SOL
+          </BalanceDisplay>
+        )}
+
+        <TokenSelect />
+        <UserButton />
+      </Right>
+    </Bar>
   )
 }
