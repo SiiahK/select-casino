@@ -6,3 +6,5 @@ dev-dist
 .env
 .vercel
 .env.production
+.env*
+package-lock.json
