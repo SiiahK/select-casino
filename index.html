@@ -32,6 +32,18 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="manifest" href="/manifest.webmanifest">
 
+    <!-- Kill stale Service Workers from previous PWA deploys -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var r of regs) { r.unregister(); }
+        });
+        caches.keys().then(function(names) {
+          for (var n of names) { caches.delete(n); }
+        });
+      }
+    </script>
+
     <!-- Telegram Mini-App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
